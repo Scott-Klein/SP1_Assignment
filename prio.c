@@ -3,6 +3,5 @@
 
 int prio(int priority)
 {
-
     return rand() % 150;
 }
