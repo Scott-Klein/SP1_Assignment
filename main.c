@@ -1,41 +1,62 @@
 #include "sortList.c"
 #include <stdlib.h>
+#include <string.h>
 
-void buildList(IORB *head);
-void displayList(IORB *head);
-void fill(char **toFill);
-
+void buildList(struct iorb *head);
+void displayList(struct iorb *head);
+void fill(struct iorb *toFill, int i);
+struct iorb* buildBlock();
+struct iorb *attachBlock(struct iorb *end);
 int main()
 {
-    IORB *head;
+    struct iorb *head;
     buildList(head);
     displayList(head);
     return 0;
 }
 
-void buildList(IORB *head)
+void buildList(struct iorb *head)
 {
-    head = (IORB *)malloc(sizeof(IORB));
-    head->base_pri = rand() % 100;
+    head = buildBlock();
     for (int i = 0; i < 9; i++)
     {
-        head->link = (IORB *)malloc(sizeof(IORB));
-        head = head->link;
-        head->base_pri = rand() % 100;
-        head->filler[2] = 'a';
+        head = attachBlock(head);
     }
 }
 
-void displayList(IORB *head)
+void displayList(struct iorb *head)
 {
     while (head != NULL)
     {
-        /* code */
+        printf("Description: this is i/o request %d", head->filler[0]);
+        head = head->link;
     }
-
 }
 
-void fill(char **toFill)
+void fill(struct iorb *toFill, int i)
 {
+    char *input;
 
+    char *test2;
+    test2[0] = toFill->base_pri;
+    test2[1] = '\0';
+    strcat(input, i);
+    strcat(input, test2);
+    strcpy(toFill->filler, input);
+}
+
+//returns empty IORB with null link
+struct iorb *buildBlock()
+{
+    struct iorb *block = (IORB *)malloc(sizeof(IORB));
+    fill(block, 0);
+    return block;
+}
+
+//creates new IORB and stores in link of end
+struct iorb *attachBlock(struct iorb *end)
+{
+    end->link = (IORB *)malloc(sizeof(IORB));
+    fill(end->link, 0);
+    return end->link;
 }

@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-void Swap(IORB *a, IORB *b);
+
 
 typedef struct iorb
 {
@@ -9,6 +9,8 @@ typedef struct iorb
     struct iorb *link;
     char filler[100];
 } IORB;
+
+void Swap(struct iorb *a, struct iorb *b);
 
 void sortList(IORB *head, int (*prio)(int))
 {
