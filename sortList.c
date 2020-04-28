@@ -1,8 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-
-
 typedef struct iorb
 {
     int base_pri;
@@ -18,6 +16,7 @@ void sortList(IORB *head, int (*prio)(int))
     IORB *current = head;
     while (head != NULL)
     {
+        printf("outerWHile\n");
         while (current != NULL)
         {
             if (prio(smallest->base_pri) > prio(current->base_pri))

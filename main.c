@@ -1,61 +1,60 @@
-#include "sortList.c"
-#include <stdlib.h>
+#include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
+#include "sortList.c"
+#include "prio.c"
 
-void buildList(struct iorb *head);
+void buildList(IORB *head);
 
-void displayList(struct iorb *head);
+void displayList(IORB *head);
 
-void fill(struct iorb *toFill, int i);
-
-struct iorb* buildBlock();
-
-struct iorb *attachBlock(struct iorb *end);
+char *fillerBuilder(int i, int priority);
 
 int main()
 {
-    struct iorb *head;
+    IORB *head = (IORB *)malloc(sizeof(IORB));
+    head->base_pri = rand() % 100;
+    char *input = fillerBuilder(0, head->base_pri);
+    strcpy(head->filler, input);
+
     buildList(head);
     displayList(head);
-    return 0;
+
+    sortList(head, prio);
+    displayList(head);
 }
 
-void buildList(struct iorb *head)
+void buildList(IORB *head)
 {
-    head = buildBlock();
+    IORB *next;
+
+    head->link = (IORB *)malloc(sizeof(IORB));
+
+    next = head->link;
+
     for (int i = 0; i < 9; i++)
     {
-        head = attachBlock(head);
+        next->base_pri = rand() % 100;
+        char *input = fillerBuilder(i + 1, next->base_pri);
+        strcpy(next->filler, input);
+        next->link = (IORB *)malloc(sizeof(IORB));
+
+        next = next->link;
     }
 }
 
-void displayList(struct iorb *head)
+void displayList(IORB *head)
 {
     while (head != NULL)
     {
-        printf("Description: this is i/o request %d", head->filler[0]);
+        printf("%s\n", head->filler);
         head = head->link;
     }
 }
 
-void fill(struct iorb *toFill, int i)
+char *fillerBuilder(int i, int priority)
 {
-    char *input = "Description this is i/o requst 0, Base Priority: 11 Priority: 89";
-    strcpy(toFill->filler, input);
-}
-
-//returns empty IORB with null link
-struct iorb *buildBlock()
-{
-    struct iorb *block = (IORB *)malloc(sizeof(IORB));
-    fill(block, 0);
-    return block;
-}
-
-//creates new IORB and stores in link of end
-struct iorb *attachBlock(struct iorb *end)
-{
-    end->link = (IORB *)malloc(sizeof(IORB));
-    fill(end->link, 0);
-    return end->link;
+    char *result = malloc(100);
+    sprintf(result, "Description: this is i/o request %d, Base Priority: %d Priority %d", i, priority, 100-priority);
+    return result;
 }
