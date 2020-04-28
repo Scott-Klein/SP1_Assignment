@@ -3,10 +3,15 @@
 #include <string.h>
 
 void buildList(struct iorb *head);
+
 void displayList(struct iorb *head);
+
 void fill(struct iorb *toFill, int i);
+
 struct iorb* buildBlock();
+
 struct iorb *attachBlock(struct iorb *end);
+
 int main()
 {
     struct iorb *head;
@@ -35,13 +40,7 @@ void displayList(struct iorb *head)
 
 void fill(struct iorb *toFill, int i)
 {
-    char *input;
-
-    char *test2;
-    test2[0] = toFill->base_pri;
-    test2[1] = '\0';
-    strcat(input, i);
-    strcat(input, test2);
+    char *input = "Description this is i/o requst 0, Base Priority: 11 Priority: 89";
     strcpy(toFill->filler, input);
 }
 
