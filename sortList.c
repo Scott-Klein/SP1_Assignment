@@ -8,7 +8,7 @@ typedef struct iorb
     char filler[100];
 } IORB;
 
-void Swap(struct iorb *a, struct iorb *b);
+void swap(struct iorb *a, struct iorb *b);
 
 void sortList(IORB *head, int (*prio)(int))
 {
@@ -25,12 +25,12 @@ void sortList(IORB *head, int (*prio)(int))
             }
             current = current->link;
         }
-        Swap(smallest, head);
+        swap(smallest, head);
         current = smallest->link;
     }
 }
 
-void Swap(IORB *a, IORB *b)
+void swap(IORB *a, IORB *b)
 {
     IORB *bNext = a->link;
     IORB *aNext = b->link;
