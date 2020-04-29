@@ -20,22 +20,43 @@ void sortList(IORB *head, int (*prio)(int))
     int index;
     while (head != NULL)
     {
-        smallestIndex = 0;
-        index = 0;
+        //smallestIndex = 0;
+        //index = 0;
+        //current = head;
+        //smallest = head;
+        //while (current != NULL)
+        //{
+        //    if (prio(smallest->base_pri) > prio(current->base_pri))
+        //    {
+        //        smallest = current;
+        //        smallestIndex = index;
+        //        printf("smallest priority detected %d, at index: ", prio(smallest->base_pri));
+        //        printf("%d\n", index);
+        //    }
+        //    current = current->link;
+        //    index++;
+        //}
+        //swap(head, 0, smallestIndex);
         current = head;
-        smallest = head;
-        while (current != NULL)
+        int smallest = 50000;
+        int index = 0;
+        int smallestIndex = 0;
+        int swapFlag = 0;
+        while (current->link != NULL)
         {
-            if (prio(smallest->base_pri) > prio(current->base_pri))
+            if (smallest > current->base_pri)
             {
-                smallest = current;
+                smallest = current->base_pri;
                 smallestIndex = index;
-                printf("%d\n", index);
+                swapFlag = 1;
             }
             current = current->link;
             index++;
         }
-        swap(head, 0, smallestIndex);
+        if (swapFlag)
+        {
+            swap(head, 0, smallestIndex);
+        }
         head = head->link;
     }
 }
@@ -50,7 +71,7 @@ void swap(IORB *head, int a, int b)
     IORB *aPlus;
     IORB *bPlus;
 
-    int traversal = max(a + 1, b + 1)+1;
+    int traversal = max(a + 1, b + 1) + 1;
     printf("A is %d, B is %d\n", a, b);
     for (int i = 0; i < traversal; i++)
     {
@@ -75,12 +96,8 @@ void swap(IORB *head, int a, int b)
         {
             bBlock->link = aPlus;
         }
-
         // make b-1 point to a
-        if (b>0)
-        {
-            bLess->link = aBlock;
-        }
+        bLess->link = aBlock;
     }
     else
     {
@@ -89,16 +106,14 @@ void swap(IORB *head, int a, int b)
     }
 
     //   a-1 -> b
-    if (a>0)
-    {
-        aLess->link = bBlock;
-    }
+    aLess->link = bBlock; //SEGMENTATION FAUlt;
 
     //   a -> b+1
     if (bPlus != NULL)
     {
         aBlock->link = bPlus;
     }
+
 }
 
 int max(int a, int b)
