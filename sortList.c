@@ -15,26 +15,33 @@ int max(int a, int b);
 void sortList(IORB *head, int (*prio)(int))
 {
     IORB *smallest = head;
-    IORB *current = head;
+    IORB *current;
+    int smallestIndex;
+    int index;
     while (head != NULL)
     {
-        printf("outerWHile\n");
+        smallestIndex = 0;
+        index = 0;
+        current = head;
+        smallest = head;
         while (current != NULL)
         {
             if (prio(smallest->base_pri) > prio(current->base_pri))
             {
                 smallest = current;
+                smallestIndex = index;
+                printf("%d\n", index);
             }
             current = current->link;
+            index++;
         }
-        //swap(smallest, head);
-        current = smallest->link;
+        swap(head, 0, smallestIndex);
+        head = head->link;
     }
 }
 
 void swap(IORB *head, int a, int b)
 {
-
     IORB *current = head;
     IORB *aLess;
     IORB *aBlock;
@@ -43,55 +50,37 @@ void swap(IORB *head, int a, int b)
     IORB *aPlus;
     IORB *bPlus;
 
-    int traversal = max(a + 1, b + 1);
-    printf("traversal is %d, a is %d, b is %d\n", traversal, a, b);
-    for (int i = 0; i < traversal+3; i++)
+    int traversal = max(a + 1, b + 1)+1;
+    printf("A is %d, B is %d\n", a, b);
+    for (int i = 0; i < traversal; i++)
     {
         if (i == a - 1)
-        {
-            printf("\nI = %d\n", i);
-            printf("a minus\n");
             aLess = current;
-        }
         if (i == a)
-        {
-            printf("\nI = %d\n", i);
-            printf("a\n");
             aBlock = current;
-        }
         if (i == a + 1)
-        {
-            printf("\nI = %d\n", i);
-            printf("a plus\n");
             aPlus = current;
-        }
         if (i == b - 1)
-        {
-            printf("\nI = %d\n", i);
-            printf("b minus\n");
             bLess = current;
-        }
         if (i == b)
-        {
-            printf("\nI = %d\n", i);
-            printf("b\n");
             bBlock = current;
-        }
         if (i == b + 1)
-        {
-            printf("\nI = %d\n", i);
-            printf("b plus\n");
             bPlus = current;
-        }
         current = current->link;
     }
     if (aPlus != bBlock)
     {
         // make b point to a+1
-        bBlock->link = aPlus;
+        if (aPlus != NULL)
+        {
+            bBlock->link = aPlus;
+        }
 
         // make b-1 point to a
-        bLess->link = aBlock;
+        if (b>0)
+        {
+            bLess->link = aBlock;
+        }
     }
     else
     {
@@ -100,10 +89,16 @@ void swap(IORB *head, int a, int b)
     }
 
     //   a-1 -> b
-    aLess->link = bBlock;
+    if (a>0)
+    {
+        aLess->link = bBlock;
+    }
 
     //   a -> b+1
-    aBlock->link = bPlus;
+    if (bPlus != NULL)
+    {
+        aBlock->link = bPlus;
+    }
 }
 
 int max(int a, int b)
