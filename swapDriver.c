@@ -21,7 +21,7 @@ int main()
 
     buildList(head);
     displayList(head);
-    swap(getAt(head, 3), getAt(head, 4));
+    swap(head,3,4);
     displayList(head);
 }
 
@@ -46,7 +46,8 @@ void buildList(IORB *head)
 
 void displayList(IORB *head)
 {
-    while (head != NULL)
+    int count = 0;
+    while (head != NULL && count++ < 15)
     {
         printf("%s\n", head->filler);
         head = head->link;
