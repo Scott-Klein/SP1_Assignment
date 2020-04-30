@@ -8,45 +8,31 @@ typedef struct iorb
     char filler[100];
 } IORB;
 
-void swap(IORB *head, int a, int b);
+IORB* swap(IORB *head, int a, int b);
 
 int max(int a, int b);
 
-void sortList(IORB *head, int (*prio)(int))
+int count(IORB *list);
+
+IORB* sortList(IORB *head, int (*prio)(int))
 {
-    IORB *smallest = head;
     IORB *current;
     int smallestIndex;
     int index;
-    while (head != NULL)
+    int start = 0;
+    int size = count(head);
+    for (int i = 0; i < size; i++)
     {
-        //smallestIndex = 0;
-        //index = 0;
-        //current = head;
-        //smallest = head;
-        //while (current != NULL)
-        //{
-        //    if (prio(smallest->base_pri) > prio(current->base_pri))
-        //    {
-        //        smallest = current;
-        //        smallestIndex = index;
-        //        printf("smallest priority detected %d, at index: ", prio(smallest->base_pri));
-        //        printf("%d\n", index);
-        //    }
-        //    current = current->link;
-        //    index++;
-        //}
-        //swap(head, 0, smallestIndex);
         current = head;
         int smallest = 50000;
         int index = 0;
         int smallestIndex = 0;
         int swapFlag = 0;
-        while (current->link != NULL)
+        while (current != NULL)
         {
-            if (smallest > current->base_pri)
+            if (smallest > prio(current->base_pri) && index >= start)
             {
-                smallest = current->base_pri;
+                smallest = prio(current->base_pri);
                 smallestIndex = index;
                 swapFlag = 1;
             }
@@ -55,65 +41,88 @@ void sortList(IORB *head, int (*prio)(int))
         }
         if (swapFlag)
         {
-            swap(head, 0, smallestIndex);
+            head = swap(head, start, smallestIndex);
         }
-        head = head->link;
+        start++;
     }
+    return head;
 }
 
-void swap(IORB *head, int a, int b)
+int count(IORB *list)
+{
+    int result = 0;
+    while (list != NULL)
+    {
+        result++;
+        list = list->link;
+    }
+    return result;
+}
+
+IORB* swap(IORB *head, int a, int b)
 {
     IORB *current = head;
-    IORB *aLess;
-    IORB *aBlock;
-    IORB *bLess;
-    IORB *bBlock;
-    IORB *aPlus;
-    IORB *bPlus;
+    IORB *aPrev = NULL;
+    IORB *aBlock = NULL;
+    IORB *bPrev = NULL;
+    IORB *bBlock = NULL;
+    IORB *aNext = NULL;
+    IORB *bNext = NULL;
 
-    int traversal = max(a + 1, b + 1) + 1;
-    printf("A is %d, B is %d\n", a, b);
+    int traversal = max(a + 1, b + 1);
     for (int i = 0; i < traversal; i++)
     {
         if (i == a - 1)
-            aLess = current;
+            aPrev = current;
         if (i == a)
             aBlock = current;
-        if (i == a + 1)
-            aPlus = current;
         if (i == b - 1)
-            bLess = current;
+            bPrev = current;
         if (i == b)
             bBlock = current;
-        if (i == b + 1)
-            bPlus = current;
         current = current->link;
     }
-    if (aPlus != bBlock)
+    bNext = bBlock->link;
+    aNext = aBlock->link;
+
+    if (aBlock != NULL && bBlock != NULL)
     {
-        // make b point to a+1
-        if (aPlus != NULL)
+        //Link previous Nodes
+        if (aPrev != NULL)
         {
-            bBlock->link = aPlus;
+            aPrev->link = bBlock;
         }
-        // make b-1 point to a
-        bLess->link = aBlock;
-    }
-    else
-    {
-        //   b -> a
-        bBlock->link = aBlock;
-    }
+        if (bPrev != NULL)
+        {
+            bPrev->link = aBlock;
+        }
+        if (aBlock != bNext)
+        {
+            aBlock->link = bNext;
+        }
+        else
+        {
+            aBlock->link = bBlock;
+        }
 
-    //   a-1 -> b
-    aLess->link = bBlock; //SEGMENTATION FAUlt;
+        if (bBlock != aNext)
+        {
+            bBlock->link = aNext;
+        }
+        else
+        {
+            bBlock->link = aBlock;
+        }
 
-    //   a -> b+1
-    if (bPlus != NULL)
-    {
-        aBlock->link = bPlus;
+        if (aPrev == NULL)
+        {
+            return bBlock;
+        } else if (bPrev == NULL)
+        {
+            return aBlock;
+        }
+        return head;
     }
-
 }
 
 int max(int a, int b)

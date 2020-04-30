@@ -4,57 +4,92 @@
 #include "sortList.c"
 #include "prio.c"
 
-void buildList(IORB *head);
+IORB *buildList();
 
 void displayList(IORB *head);
-
+void displayOptions();
+void freeOld(IORB *top);
 char *fillerBuilder(int i, int priority);
 
 int main()
 {
-    IORB *head = (IORB *)malloc(sizeof(IORB));
-    head->base_pri = rand() % 100;
-    char *input = fillerBuilder(0, head->base_pri);
-    strcpy(head->filler, input);
-
-    buildList(head);
-    displayList(head);
-
-    sortList(head, prio);
-    displayList(head);
+    IORB *head = NULL;
+    int input = -1;
+    while (input != 0)
+    {
+        displayOptions();
+        scanf("%d", &input);
+        printf("\n");
+        if (input == 1)
+        {
+            freeOld(head);
+            head = NULL;
+            head = buildList();
+        }
+        else if (input == 2)
+        {
+            head = sortList(head, prio);
+        }
+        else if (input == 3)
+        {
+            displayList(head);
+        }
+    }
+    printf("Terminating...\n");
 }
 
-void buildList(IORB *head)
+void freeOld(IORB *top)
 {
     IORB *next;
+    while (top != NULL)
+    {
+        next = top->link;
+        free(top);
+        top = next;
+    }
+}
 
-    head->link = (IORB *)malloc(sizeof(IORB));
+IORB *buildBlock(int i)
+{
+    IORB *block = (IORB *)malloc(sizeof(IORB));
+    block->base_pri = rand() % 100;
+    char *input = fillerBuilder(i, block->base_pri);
+    strcpy(block->filler, input);
+    return block;
+}
 
-    next = head->link;
-
+IORB *buildList()
+{
+    IORB *top = buildBlock(0);
+    IORB *current = top;
     for (int i = 0; i < 9; i++)
     {
-        next->base_pri = rand() % 100;
-        char *input = fillerBuilder(i + 1, next->base_pri);
-        strcpy(next->filler, input);
-        next->link = (IORB *)malloc(sizeof(IORB));
-
-        next = next->link;
+        current->link = buildBlock(i + 1);
+        current = current->link;
     }
+    current->link = NULL;
+    return top;
+}
+
+void displayOptions()
+{
+    printf("Please enter your choiece:\n\n0) Exit\n\n1) Build List\n\n2) Sort List (ascending)\n\n3) Display List\n\n Your choice: ");
 }
 
 void displayList(IORB *head)
 {
-    while (head != NULL)
+    int count = 0;
+    while (head != NULL && count++ < 15)
     {
         printf("%s\n", head->filler);
         head = head->link;
     }
+    printf("\n");
 }
 
 char *fillerBuilder(int i, int priority)
 {
     char *result = malloc(100);
-    sprintf(result, "Description: this is i/o request %d, Base Priority: %d Priority %d", i, priority, 100-priority);
+    sprintf(result, "Description: this is i/o request %d, Base Priority: %d Priority %d", i, priority, 100 - priority);
     return result;
 }
