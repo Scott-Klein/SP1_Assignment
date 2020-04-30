@@ -1,3 +1,4 @@
+#pragma once
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -8,12 +9,18 @@ typedef struct iorb
     char filler[100];
 } IORB;
 
+//Swaps the nodes at position a and b of list pointed to by head
+//returns pointer to new head node, since the top might have changed
 IORB* swap(IORB *head, int a, int b);
 
+//Returns the higher value from a and b.
 int max(int a, int b);
 
+//counts the number of nodes in the list.
 int count(IORB *list);
 
+//sorts the list in ascending order.
+//returns pointer to new head because the head may be different.
 IORB* sortList(IORB *head, int (*prio)(int))
 {
     IORB *current;
@@ -21,6 +28,8 @@ IORB* sortList(IORB *head, int (*prio)(int))
     int index;
     int start = 0;
     int size = count(head);
+
+    //bring the smallest node to the front and then move on.
     for (int i = 0; i < size; i++)
     {
         current = head;
@@ -28,6 +37,7 @@ IORB* sortList(IORB *head, int (*prio)(int))
         int index = 0;
         int smallestIndex = 0;
         int swapFlag = 0;
+        //
         while (current != NULL)
         {
             if (smallest > prio(current->base_pri) && index >= start)
@@ -55,6 +65,7 @@ int count(IORB *list)
     {
         result++;
         list = list->link;
+
     }
     return result;
 }
