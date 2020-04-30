@@ -24,8 +24,6 @@ int count(IORB *list);
 IORB* sortList(IORB *head, int (*prio)(int))
 {
     IORB *current;
-    int smallestIndex;
-    int index;
     int start = 0;
     int size = count(head);
 

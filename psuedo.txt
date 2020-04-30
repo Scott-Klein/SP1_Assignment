@@ -1,0 +1,256 @@
+main
+    List head
+    number input = -1
+    while input is not 0
+        display input options
+        get user input
+        if input 1   //Build list option
+            delete old list
+            head = new list
+        end if
+
+        else if input 2
+            sort list
+        end if
+
+        else if input 3
+            print list
+        end if
+
+        else
+            print "Input not recognised"
+        end if
+    end while
+    print "Terminating"
+end main
+
+
+buildList
+    top = new block
+    current = top
+
+    repeat 10 times
+        current.link = new block
+        current = current.link
+    end repeat
+
+    return top
+end buildList
+
+displayList
+    while head is not NULL
+        print head.filler
+        head = head.link
+    end while
+end displayList
+
+sortList (head, priority())
+    List current
+    number start = 0
+    number size = count(current)
+
+    repeat size times
+        number smallestIndex
+        number index
+        number smallest = 50000
+        flag   swapflag = false
+
+        while current is not NULL
+            if smallest > priority(current.base_pri) AND index >= start
+                smallest = priority(current.base_pri)
+                smallestIndex = index
+                swapflag = true
+            end if
+
+            current = current.link
+            index = index +1
+        end while
+
+        if swapflag is true
+            head = swap(head, start, smallestIndex)
+        end if
+
+        start = start + 1
+    end repeat
+
+    return head
+end sortList
+
+swap(top, a, b)
+    aPrevious
+    aNode
+    bPrevious
+    bNode
+    aNext
+    bNext
+
+    number traversal = max(a+1, b+1)
+
+    repeat traversal times
+        if loop is a - 1
+            aPrevious = current
+        if loop is a
+            aNode = current
+        if loop is b - 1
+            bPrevious = current
+        if loop is b
+            bNode = current
+        current = current.link
+    end repeat
+
+    bNext = bNode.link
+    aNext = aNode.link
+
+    //perform the actual swap
+    aPrevious.link = bNode
+    bPrevious.link = aNode
+
+    aBlock.link = bNext
+    bBlock.link = aNext
+
+end swap
+
+
+IORB* swap(IORB *head, int a, int b)
+{
+    IORB *current = head;
+    IORB *aPrev = NULL;
+    IORB *aBlock = NULL;
+    IORB *bPrev = NULL;
+    IORB *bBlock = NULL;
+    IORB *aNext = NULL;
+    IORB *bNext = NULL;
+
+    int traversal = max(a + 1, b + 1); //find the distance that we need to travel
+    for (int i = 0; i < traversal; i++)
+    {
+        if (i == a - 1)
+            aPrev = current;
+        if (i == a)
+            aBlock = current;
+        if (i == b - 1)
+            bPrev = current;
+        if (i == b)
+            bBlock = current;
+        current = current->link;
+    }
+    bNext = bBlock->link;
+    aNext = aBlock->link;
+    //make sure that the nodes are not null.
+    if (aBlock != NULL && bBlock != NULL)
+    {
+        //Link previous Nodes
+        if (aPrev != NULL)
+            aPrev->link = bBlock;
+        if (bPrev != NULL)
+            bPrev->link = aBlock;
+        if (aBlock != bNext) // prevent a pointing to itself
+            aBlock->link = bNext;
+        else // a is now before b
+            aBlock->link = bBlock;
+
+        if (bBlock != aNext) // prevent b pointing to itself
+            bBlock->link = aNext;
+        else // b is now before a
+            bBlock->link = aBlock;
+
+        //if a was the first node, now b is so return b as the new head.
+        if (aPrev == NULL)
+            return bBlock;
+        else if (bPrev == NULL) // if b was the first node, now a is first, so return a as the new head.
+            return aBlock;
+        return head; // the head has not been swapped so return it untouched.
+    }
+}
+
+IORB* sortList(IORB *head, int (*prio)(int))
+{
+    IORB *current;
+    int smallestIndex;
+    int index;
+    int start = 0;
+    int size = count(head);
+
+    //bring the smallest node to the front and then move on.
+    for (int i = 0; i < size; i++)
+    {
+        current = head;
+        int smallest = 50000;
+        int index = 0;
+        int smallestIndex = 0;
+        int swapFlag = 0;
+        //
+        while (current != NULL)
+        {
+            if (smallest > prio(current->base_pri) && index >= start)
+            {
+                smallest = prio(current->base_pri);
+                smallestIndex = index;
+                swapFlag = 1;
+            }
+            current = current->link;
+            index++;
+        }
+        if (swapFlag)
+        {
+            head = swap(head, start, smallestIndex);
+        }
+        start++;
+    }
+    return head;
+}
+
+
+void displayList(IORB *head)
+{
+    while (head != NULL) //while not at the end of the list print the contents
+    {
+        printf("%s\n", head->filler);
+        head = head->link; //select the next node.
+    }
+    printf("\n");
+}
+
+IORB *buildList()
+{
+    IORB *top = buildBlock(0);
+    IORB *current = top;
+    for (int i = 0; i < 9; i++)
+    {
+        current->link = buildBlock(i + 1);
+        current = current->link;
+    }
+    current->link = NULL; //explicitly terminate the end of the list.
+    return top;
+}
+
+int main()
+{
+    IORB *head = NULL;
+    int input = -1;
+    while (input != 0)
+    {
+        displayOptions();
+        scanf("%d", &input);
+        printf("\n");
+        if (input == 1)
+        {
+            freeOld(head); // clean up an old list if building a new one.
+            head = NULL;
+            head = buildList();
+        }
+        else if (input == 2)
+        {
+            head = sortList(head, prio);
+        }
+        else if (input == 3)
+        {
+            displayList(head);
+        }
+        else
+        {
+            printf("Your input was not recognised, please enter a number (0-3)\n");
+        }
+    }
+    printf("Terminating...\n");
+}
