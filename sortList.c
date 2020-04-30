@@ -80,7 +80,7 @@ IORB* swap(IORB *head, int a, int b)
     IORB *aNext = NULL;
     IORB *bNext = NULL;
 
-    int traversal = max(a + 1, b + 1);
+    int traversal = max(a + 1, b + 1); //find the distance that we need to travel
     for (int i = 0; i < traversal; i++)
     {
         if (i == a - 1)
@@ -95,7 +95,7 @@ IORB* swap(IORB *head, int a, int b)
     }
     bNext = bBlock->link;
     aNext = aBlock->link;
-
+    //make sure that the nodes are not null.
     if (aBlock != NULL && bBlock != NULL)
     {
         //Link previous Nodes
@@ -107,32 +107,33 @@ IORB* swap(IORB *head, int a, int b)
         {
             bPrev->link = aBlock;
         }
-        if (aBlock != bNext)
+        if (aBlock != bNext) // prevent a pointing to itself
         {
             aBlock->link = bNext;
         }
-        else
+        else // a is now before b
         {
             aBlock->link = bBlock;
         }
 
-        if (bBlock != aNext)
+        if (bBlock != aNext) // prevent b pointing to itself
         {
             bBlock->link = aNext;
         }
-        else
+        else // b is now before a
         {
             bBlock->link = aBlock;
         }
 
+        //if a was the first node, now b is so return b as the new head.
         if (aPrev == NULL)
         {
             return bBlock;
-        } else if (bPrev == NULL)
+        } else if (bPrev == NULL) // if b was the first node, now a is first, so return a as the new head.
         {
             return aBlock;
         }
-        return head;
+        return head; // the head has not been swapped so return it untouched.
     }
 }
 
